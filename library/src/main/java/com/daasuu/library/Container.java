@@ -48,7 +48,7 @@ public class Container extends DisplayBase {
     }
 
     @Override
-    void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         super.draw(canvas);
 
         mDrawingList.addAll(mDisplayList);
@@ -65,7 +65,7 @@ public class Container extends DisplayBase {
     }
 
     @Override
-    void setUp(long fps) {
+    public void setUp(long fps) {
         super.setUp(fps);
         mFps = fps;
         for (DisplayObject DisplayObject : mDisplayList) {

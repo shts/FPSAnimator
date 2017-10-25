@@ -37,7 +37,7 @@ public abstract class DisplayBase implements Comparable<DisplayBase> {
      *
      * @param fps Set in FPSTextureView or FPSSurfaceView.
      */
-    void setUp(long fps) {
+    public void setUp(long fps) {
         synchronized (this) {
             mIsEnable = true;
         }
@@ -75,7 +75,7 @@ public abstract class DisplayBase implements Comparable<DisplayBase> {
      *
      * @param canvas This Canvas acquired by lookCanvas in FPSTextureView or FPSSurfaceView.
      */
-    void draw(@NonNull Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         synchronized (this) {
             if (mIsEnable) {
                 mAnimator.setBaseLine(canvas, mDrawer.getWidth(), mDrawer.getHeight());
@@ -116,7 +116,7 @@ public abstract class DisplayBase implements Comparable<DisplayBase> {
      * disable this display object.
      * This call from FPSTextureView, FPSSurfaceView or Container when it is removeChild.
      */
-    void disable() {
+    public void disable() {
         synchronized (this) {
             mIsEnable = false;
         }
