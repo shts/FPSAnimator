@@ -25,16 +25,12 @@ import java.util.TimerTask;
  */
 public abstract class FPSMultiInputSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
-    public interface OnStopTimerListener {
-        void onStop();
-    }
-
     private Timer mTimer;
     private int mFps = Constant.DEFAULT_FPS;
 
     private SurfaceHolder mSurfaceHolder;
     private boolean isInputSurfaceMode;
-    private OnStopTimerListener onStopTimerListener;
+    private OnTickStopListener onTickStopListener;
 
     private List<DisplayBase> mDisplayList = new ArrayList<>();
     private final List<DisplayBase> mDrawingList = new ArrayList<>();
@@ -85,8 +81,8 @@ public abstract class FPSMultiInputSurfaceView extends SurfaceView implements Su
         return mFps;
     }
 
-    public void setOnStopTimerListener(OnStopTimerListener onStopTimerListener) {
-        this.onStopTimerListener = onStopTimerListener;
+    public void setOnTickStopListener(OnTickStopListener onTickStopListener) {
+        this.onTickStopListener = onTickStopListener;
     }
 
     /**
@@ -128,8 +124,8 @@ public abstract class FPSMultiInputSurfaceView extends SurfaceView implements Su
             mTimer.cancel();
             mTimer = null;
         }
-        if (onStopTimerListener != null) {
-            onStopTimerListener.onStop();
+        if (onTickStopListener != null) {
+            onTickStopListener.onTickStop();
         }
     }
 

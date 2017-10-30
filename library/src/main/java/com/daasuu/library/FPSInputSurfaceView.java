@@ -29,6 +29,7 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
     private int mFps = Constant.DEFAULT_FPS;
 
     private SurfaceHolder mSurfaceHolder;
+    private OnTickStopListener onTickStopListener;
 
     private List<DisplayBase> mDisplayList = new ArrayList<>();
     private final List<DisplayBase> mDrawingList = new ArrayList<>();
@@ -79,6 +80,10 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
         return mFps;
     }
 
+    public void setOnTickStopListener(OnTickStopListener onTickStopListener) {
+        this.onTickStopListener = onTickStopListener;
+    }
+
     /**
      * Start tick
      *
@@ -103,6 +108,9 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
+        }
+        if (onTickStopListener != null) {
+            onTickStopListener.onTickStop();
         }
     }
 
