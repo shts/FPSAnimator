@@ -1,6 +1,5 @@
 package com.daasuu.FPSAnimator.record;
 
-import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
@@ -16,6 +15,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Created by shotasaitou on 2017/10/25.
+ * https://github.com/google/grafika/blob/master/src/com/android/grafika/SoftInputSurfaceActivity.java
  */
 class Recorder {
 
@@ -113,7 +113,7 @@ class Recorder {
      * Calling this with endOfStream set should be done once, right before stopping the muxer.
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void drainEncoder(boolean endOfStream) {
+    private synchronized void drainEncoder(boolean endOfStream) {
         final int TIMEOUT_USEC = 10000;
         if (VERBOSE) Log.d(TAG, "drainEncoder(" + endOfStream + ")");
 
@@ -195,7 +195,6 @@ class Recorder {
     }
 
     Surface getInputSurface() {
-        if (mInputSurface == null) throw new RuntimeException("recorder not initialize. prepare() before call getInputSurface()");
         return mInputSurface;
     }
 
