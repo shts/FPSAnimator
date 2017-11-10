@@ -9,7 +9,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.daasuu.FPSAnimator.util.UIUtil;
-import com.daasuu.library.InputSurfaceView;
+import com.daasuu.library.FPSInputSurfaceView;
 
 import java.io.File;
 
@@ -17,8 +17,8 @@ import java.io.File;
  * Created by shotasaitou on 2017/11/07.
  */
 
-public class MultipleInputSurfaceView extends InputSurfaceView implements SurfaceHolder.Callback {
-    private static final String TAG = MultipleInputSurfaceView.class.getSimpleName();
+public class MultipleFPSInputSurfaceView extends FPSInputSurfaceView implements SurfaceHolder.Callback {
+    private static final String TAG = MultipleFPSInputSurfaceView.class.getSimpleName();
 
     private boolean isRecordable;
     private boolean isFinish;
@@ -26,22 +26,22 @@ public class MultipleInputSurfaceView extends InputSurfaceView implements Surfac
     private SurfaceHolder surfaceHolder;
     private Recorder recorder;
 
-    public MultipleInputSurfaceView(Context context) {
+    public MultipleFPSInputSurfaceView(Context context) {
         super(context);
         initSurface();
     }
 
-    public MultipleInputSurfaceView(Context context, int fps) {
+    public MultipleFPSInputSurfaceView(Context context, int fps) {
         super(context, fps);
         initSurface();
     }
 
-    public MultipleInputSurfaceView(Context context, AttributeSet attrs) {
+    public MultipleFPSInputSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initSurface();
     }
 
-    public MultipleInputSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MultipleFPSInputSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initSurface();
     }

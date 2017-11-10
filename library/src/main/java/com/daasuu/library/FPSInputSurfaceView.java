@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.daasuu.library.constant.Constant;
@@ -21,16 +19,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by shotasaitou on 2017/10/25.
+ * Created by shotasaitou on 2017/11/07.
  */
-public abstract class FPSInputSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+
+public abstract class FPSInputSurfaceView extends SurfaceView {
+    private static final String TAG = FPSInputSurfaceView.class.getSimpleName();
 
     private Timer mTimer;
     private int mFps = Constant.DEFAULT_FPS;
 
-    private SurfaceHolder mSurfaceHolder;
-    private OnTickStopListener onTickStopListener;
-
+    private volatile boolean isFinish;
     private List<DisplayBase> mDisplayList = new ArrayList<>();
     private final List<DisplayBase> mDrawingList = new ArrayList<>();
 
@@ -60,9 +58,6 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
     public FPSInputSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(this);
-        mSurfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
         setZOrderOnTop(true);
 
         // FPS set
@@ -72,25 +67,15 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
 
     }
 
-    public void setFps(int fps) {
-        mFps = fps;
-    }
-
     public int getFps() {
         return mFps;
     }
 
-    public void setOnTickStopListener(OnTickStopListener onTickStopListener) {
-        this.onTickStopListener = onTickStopListener;
-    }
-
     /**
      * Start tick
-     *
-     * @return this
      */
-    public FPSInputSurfaceView tickStart() {
-        tickStop();
+    public void tickStart() {
+        isFinish = false;
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -98,30 +83,26 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
                 onTick();
             }
         }, 0, 1000 / mFps);
-        return this;
     }
 
     /**
      * Stop tick
      */
     public void tickStop() {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-        if (onTickStopListener != null) {
-            onTickStopListener.onTickStop();
-        }
+        isFinish = true;
     }
 
     private void onTick() {
-
         synchronized (this) {
-
             Surface inputSurface = getInputSurface();
-            if (inputSurface == null) return;
+            if (inputSurface == null) {
+                return;
+            }
+
             Canvas canvas = inputSurface.lockCanvas(null);
-            if (canvas == null) return;
+            if (canvas == null) {
+                return;
+            }
 
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
@@ -138,34 +119,23 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
             mDrawingList.clear();
 
             inputSurface.unlockCanvasAndPost(canvas);
-        }
 
+            // https://docs.oracle.com/javase/jp/6/api/java/util/Timer.html#cancel()
+            if (isFinish) {
+                if (mTimer != null) {
+                    mTimer.cancel();
+                    mTimer = null;
+                    onStopped();
+                }
+            }
+        }
     }
 
-    /**
-     * @return input surface
-     */
-    public abstract Surface getInputSurface();
+    public abstract void onStopped();
 
-    /**
-     * notify before draw
-     */
     public abstract void onPreDraw();
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        // do nothing
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // do nothing
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        tickStop();
-    }
+    public abstract Surface getInputSurface();
 
     /**
      * Adds a child to the top of the display list.
@@ -257,5 +227,14 @@ public abstract class FPSInputSurfaceView extends SurfaceView implements Surface
      */
     public List<DisplayBase> getDisplayList() {
         return mDisplayList;
+    }
+
+    /**
+     * Getter DrawingList
+     *
+     * @return DrawingList
+     */
+    public List<DisplayBase> getDrawingList() {
+        return mDrawingList;
     }
 }

@@ -2,7 +2,6 @@ package com.daasuu.library.animator;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 
 import com.daasuu.library.AnimParameter;
 import com.daasuu.library.Animator;
@@ -158,8 +157,6 @@ public class TweenAnimator implements Animator {
         if (animParamNum < 1) {
             animParamNum = 1;
         }
-
-        Log.d(TAG, "createAnimParamList: alpha(" + tweenParameter.alpha + ")");
 
         float cntX;
         float cntY;

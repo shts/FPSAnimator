@@ -11,14 +11,12 @@ import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.daasuu.FPSAnimator.record.MultipleInputSurfaceView;
+import com.daasuu.FPSAnimator.record.MultipleFPSInputSurfaceView;
 import com.daasuu.FPSAnimator.util.UIUtil;
 import com.daasuu.library.DisplayObject;
-import com.daasuu.library.FPSTextureView;
 import com.daasuu.library.callback.AnimCallBack;
 import com.daasuu.library.drawer.BitmapDrawer;
 import com.daasuu.library.drawer.TextDrawer;
@@ -29,7 +27,7 @@ import java.io.File;
 
 public class TweenSampleActivity extends AppCompatActivity {
 
-    private MultipleInputSurfaceView mFPSTextureView;
+    private MultipleFPSInputSurfaceView mFPSTextureView;
     private boolean started;
 
     public static void startActivity(Context context) {
@@ -41,7 +39,7 @@ public class TweenSampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tween_sample);
-        mFPSTextureView = (MultipleInputSurfaceView) findViewById(R.id.animation_texture_view);
+        mFPSTextureView = (MultipleFPSInputSurfaceView) findViewById(R.id.animation_texture_view);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         DisplayObject bitmapDisplayA = new DisplayObject();
