@@ -2,7 +2,6 @@ package com.daasuu.library.animator;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 
 import com.daasuu.library.AnimParameter;
 import com.daasuu.library.Animator;
@@ -298,7 +297,6 @@ public class TweenAnimator implements Animator {
             this.animDuration = animDuration;
             this.ease = ease;
             this.angle = angle;
-            Log.d(TAG, "TweenParameter: in: alpha(" + alpha + ")");
         }
 
         @Override
