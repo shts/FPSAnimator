@@ -2,6 +2,7 @@ package com.daasuu.library.animator;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.daasuu.library.AnimParameter;
 import com.daasuu.library.Animator;
@@ -177,8 +178,6 @@ public class TweenAnimator implements Animator {
         cntScaleY = (tweenParameter.scaleY - beforeParam.scaleY) / animParamNum;
 
         if (tweenParameter.angle == TweenParameter.DEFAULT_ANGLE) {
-
-            boolean alpha0 = tweenParameter.alpha == 0;
             for (int i = 0; i < animParamNum; i++) {
                 float elapsedTimeRate = (float) i / (float) animParamNum;
                 float valueChangeRate = EaseProvider.get(tweenParameter.ease, elapsedTimeRate);
@@ -186,7 +185,7 @@ public class TweenAnimator implements Animator {
                 AnimParameter animParameter = new AnimParameter(
                         beforeParam.x + cntX * i * valueChangeRate,
                         beforeParam.y + cntY * i * valueChangeRate,
-                        (i == (animParamNum - 1) && alpha0) ? 0 : (int) (beforeParam.alpha + cntAlpha * i * valueChangeRate),
+                        (int) (beforeParam.alpha + cntAlpha * i * valueChangeRate),
                         beforeParam.scaleX + cntScaleX * i * valueChangeRate,
                         beforeParam.scaleY + cntScaleY * i * valueChangeRate,
                         beforeParam.rotation + cntRotation * i * valueChangeRate
@@ -195,6 +194,15 @@ public class TweenAnimator implements Animator {
                 params.add(animParameter);
             }
 
+            // Fix alpha bug
+            boolean toAlpha0 = (tweenParameter.alpha == 0) && (beforeParam.alpha == 255);
+            if (toAlpha0) {
+                params.get(params.size() - 1).alpha = 0;
+            }
+            boolean toAlpha255 = (tweenParameter.alpha == 255) && (beforeParam.alpha == 0);
+            if (toAlpha255) {
+                params.get(params.size() - 1).alpha = 255;
+            }
         } else {
 
 
@@ -290,6 +298,7 @@ public class TweenAnimator implements Animator {
             this.animDuration = animDuration;
             this.ease = ease;
             this.angle = angle;
+            Log.d(TAG, "TweenParameter: in: alpha(" + alpha + ")");
         }
 
         @Override

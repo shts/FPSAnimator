@@ -5,30 +5,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
-import com.daasuu.FPSAnimator.record.MultipleFPSInputSurfaceView;
 import com.daasuu.FPSAnimator.util.UIUtil;
 import com.daasuu.library.DisplayObject;
+import com.daasuu.library.FPSTextureView;
 import com.daasuu.library.callback.AnimCallBack;
 import com.daasuu.library.drawer.BitmapDrawer;
 import com.daasuu.library.drawer.TextDrawer;
 import com.daasuu.library.easing.Ease;
 import com.daasuu.library.util.Util;
 
-import java.io.File;
-
 public class TweenSampleActivity extends AppCompatActivity {
 
-    private MultipleFPSInputSurfaceView mFPSTextureView;
-    private boolean started;
+    private FPSTextureView mFPSTextureView;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, TweenSampleActivity.class);
@@ -39,7 +32,7 @@ public class TweenSampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tween_sample);
-        mFPSTextureView = (MultipleFPSInputSurfaceView) findViewById(R.id.animation_texture_view);
+        mFPSTextureView = (FPSTextureView) findViewById(R.id.animation_texture_view);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         DisplayObject bitmapDisplayA = new DisplayObject();
@@ -55,9 +48,6 @@ public class TweenSampleActivity extends AppCompatActivity {
                     public void call() {
                         Snackbar.make(mFPSTextureView, "BitmapA animation finished!", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            mFPSTextureView.finishRecord();
-                        }
                     }
                 })
                 .end();
@@ -102,42 +92,18 @@ public class TweenSampleActivity extends AppCompatActivity {
                 .addChild(bitmapDisplayB)
                 .addChild(textDisplay);
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-            @Override
-            public void onClick(View v) {
-                startRecord();
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        mFPSTextureView.tickStart();
+        mFPSTextureView.tickStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        mFPSTextureView.tickStop();
+        mFPSTextureView.tickStop();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void startRecord() {
-        File dir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "multi-sample");
-        dir.mkdir();
-        mFPSTextureView.startRecord(new File(dir, "out.mp4"));
-    }
-
-    @Override
-    protected void onDestroy() {
-        mFPSTextureView.finishAnimation();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mFPSTextureView.finishRecord();
-        }
-
-        super.onDestroy();
-    }
 }
